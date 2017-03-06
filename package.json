@@ -1,6 +1,6 @@
 {
   "name": "alexa-skill-test",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Test Alexa skills through a local server.",
   "main": "bin/start.js",
   "license": "MIT",
@@ -14,6 +14,14 @@
     "type": "git",
     "url": "https://github.com/voiyse/alexa-skill-test"
   },
+  "keywords": [
+    "alexa",
+    "alexa skill",
+    "alexa sdk",
+    "alexa lambda",
+    "alexa utterance",
+    "alexa schema"
+  ],
   "dependencies": {
     "add": "^2.0.6",
     "argparse": "^1.0.9",

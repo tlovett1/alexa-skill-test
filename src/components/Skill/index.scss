@@ -1,0 +1,28 @@
+@import '../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables';
+
+.code {
+  white-space: pre;
+  font-family: monospace;
+  border: 1px solid $gray-lighter;
+  display: inline-block;
+  width: 100%;
+  min-height: 25px;
+  overflow: scroll;
+  padding: $padding-base-vertical $padding-base-horizontal;
+}
+
+.slot input {
+  display: inline-block;
+  width: 250px;
+  margin-right: $padding-base-horizontal * 2;
+  margin-bottom: $padding-base-vertical * 2;
+}
+
+.delete-slot {
+  font-size: $font-size-large;
+  display: inline-block;
+}
+
+.req-resp {
+  margin-top: $padding-base-vertical * 4;
+}

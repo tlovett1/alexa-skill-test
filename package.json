@@ -10,6 +10,10 @@
   "bin": {
     "alexa-skill-test": "./bin/start.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/voiyse/alexa-skill-test"
+  },
   "dependencies": {
     "add": "^2.0.6",
     "argparse": "^1.0.9",

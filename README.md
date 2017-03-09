@@ -5,8 +5,7 @@ Alexa Skill Test provides a live server for local testing of Alexa Skills writte
 ## Requirements
 
 * Node/npm
-* An Amazon Alexa Skill built using the [https://github.com/alexa/alexa-skills-kit-sdk-for-nodejs](Alexa Skill Kit SDK for Node.js)
-
+* An Amazon Alexa Skill written in Node.js
 ## Install
 
 It's recommended to install Alexa Skill Test as a global npm package:

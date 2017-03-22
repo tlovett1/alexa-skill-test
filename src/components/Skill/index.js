@@ -10,9 +10,11 @@ class Skill extends React.Component {
 
     this.doRequest = this.doRequest.bind(this);
     this.createRequest = this.createRequest.bind(this);
+    this.setRequest = this.setRequest.bind(this);
 
     this.state = {
-      request: this.createRequest(props)
+      request: this.createRequest(props),
+      validRequest: true
     }
   }
 
@@ -39,7 +41,22 @@ class Skill extends React.Component {
       }
     }
 
-    return request
+    return beautify(JSON.stringify(request))
+  }
+
+  setRequest(jsonString) {
+    let validRequest;
+    try {
+      let json = JSON.parse(jsonString)
+      validRequest = true
+    } catch (error) {
+      validRequest = false
+    }
+
+    this.setState({
+      request: jsonString,
+      validRequest: validRequest
+    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -50,14 +67,17 @@ class Skill extends React.Component {
 
   doRequest() {
     debug('Skill Component: doRequest');
-    this.props.actions.doRequest(this.state.request);
+    if (this.state.validRequest) {
+      this.props.actions.doRequest(JSON.parse(this.state.request));
+    }
   }
 
   render() {
     debug('Skill Component: render');
 
-    const request = beautify(JSON.stringify(this.state.request))
+    const request = this.state.request
     const response = beautify(JSON.stringify(this.props.response))
+    const requestClass = (this.state.validRequest) ? 'code' : 'invalid code'
 
     return (
       <div className="container-fluid">
@@ -110,7 +130,7 @@ class Skill extends React.Component {
         <div className="row req-resp">
           <div className="col-md-6">
             <h2>Request</h2>
-            <div className="request" className="code">{request}</div>
+            <textarea className={requestClass} onChange={(event) => this.setRequest(event.target.value)} value={request}></textarea>
           </div>
           <div className="col-md-6">
             <h2>Response</h2>

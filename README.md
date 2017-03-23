@@ -24,6 +24,18 @@ This starts up a local testing server using your Alexa skill.
 
 In your browser navigate to `http://localhost:3000`. You should see a simple UI for sending test requests to your skill.
 
+*Note:*
+
+In the skill(s) you're testing, you should set your `appId` like so:
+
+```js
+if ('undefined' === typeof process.env.DEBUG) {
+  alexa.appId = '...';
+}
+```
+
+Setting an `appId` while debugging will cause Lambda to throw an error since there will be a mismatch. Alexa Skill Test will automatically set the `DEBUG` environmental variable.
+
 ## License
 
 MIT

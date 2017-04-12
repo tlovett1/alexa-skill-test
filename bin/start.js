@@ -53,6 +53,6 @@ nodemon({
     path + '/'
   ],
   env: {
-    DEBUG: (process.env.DEBUG) ? process.env.DEBUG : 'skill'
+    'DEBUG': (process.env.DEBUG) ? process.env.DEBUG : 'skill'
   }
 });

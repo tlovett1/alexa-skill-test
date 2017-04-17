@@ -3,6 +3,7 @@
   "version": "1.1.0",
   "description": "Test Alexa skills through a local server.",
   "main": "bin/start.js",
+  "engineStrict": true,
   "license": "MIT",
   "scripts": {
     "start": "DEBUG=* node bin/start.js"
@@ -13,6 +14,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/voiyse/alexa-skill-test"
+  },
+  "engines": {
+    "node": ">=4.7"
   },
   "keywords": [
     "alexa",
@@ -55,6 +59,7 @@
     "style-loader": "^0.13.2",
     "tiny-lr": "^1.0.3",
     "webpack": "^2.2.1",
+    "webpack-dev-middleware": "^1.10.1",
     "webpack-dev-server": "^2.4.1",
     "yarn": "^0.21.3"
   }

@@ -43,6 +43,7 @@ try {
 }
 
 nodemon({
+  nodeArgs: (process.env.REMOTE_DEBUG) ? ['--debug'] : [],
   script: __dirname + '/../server.js',
   args: [path  + '/' + mainScriptFile, skillPackageConf.name],
   watch: [
@@ -52,6 +53,6 @@ nodemon({
     path + '/'
   ],
   env: {
-    DEBUG: (process.env.DEBUG) ? process.env.DEBUG : 'skill'
+    'DEBUG': (process.env.DEBUG) ? process.env.DEBUG : 'skill'
   }
 });

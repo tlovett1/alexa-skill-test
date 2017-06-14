@@ -16,6 +16,9 @@ var skill = require(process.argv[2]);
 
 var skillName = process.argv[3];
 
+// pull the port number out of the string '--port 3000' 
+var port = process.argv[4].substring(7, process.argv[4].length)
+
 var livereloadServerConf = {
   port: 35729
 };
@@ -85,8 +88,8 @@ app.post('/lambda', function(req, res) {
   });
 });
 
-app.listen(3000, function() {
+app.listen(port, function() {
   console.log('Alexa Skill Test');
   console.log('Skill: ' + skillName);
-  console.log('Open http://localhost:3000 in your browser'.green)
+  console.log('Open http://localhost:' + port + ' in your browser'.green)
 });

@@ -27,6 +27,11 @@ try {
   process.exit(1);
 }
 
+if (typeof skillPackageConf.name !== 'string') {
+  console.error('Package.json requires a name property.'.red);
+  process.exit(1);
+}
+
 if (!skillPackageConf.main) {
   console.error('Main script file not found.'.red);
   process.exit(1);

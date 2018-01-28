@@ -16,9 +16,20 @@ parser.addArgument(
   }
 );
 
+// Add the port option
+parser.addArgument(
+  ['--port'],
+  {
+    help: 'Run on a Specific Port (Default=3000)'
+  }
+);
+
 var args = parser.parseArgs();
 
 var path = args.path ? args.path : process.cwd();
+
+// Set port value
+var port = args.port ? args.port : 3000;
 
 try {
   var skillPackageConf = require(path + '/package.json');
@@ -50,7 +61,7 @@ try {
 nodemon({
   nodeArgs: (process.env.REMOTE_DEBUG) ? ['--debug'] : [],
   script: __dirname + '/../server.js',
-  args: [path  + '/' + mainScriptFile, skillPackageConf.name],
+  args: [path  + '/' + mainScriptFile, skillPackageConf.name, '--port ' + port],
   watch: [
     __dirname + '/../server.js',
     __dirname + '/../package.json',

@@ -6,7 +6,6 @@ module.exports = {
   devtool: 'inline-source-map',
   watch: true,
   output: {
-    path:'/',
     filename: 'dist/client.js'
   },
   module: {

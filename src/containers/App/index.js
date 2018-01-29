@@ -1,8 +1,9 @@
 import Skill from '../../components/Skill';
-import React, { PropTypes } from 'react'
+import React from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
+import PropTypes from 'prop-types'
 import './index.scss'
 
 class App extends React.Component {

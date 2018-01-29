@@ -79,6 +79,19 @@ class Skill extends React.Component {
     const response = beautify(JSON.stringify(this.props.response))
     const requestClass = (this.state.validRequest) ? 'code' : 'invalid code'
 
+    let chosenModelIntent = null
+
+    if (this.props.intentName && window.INTERACTION_MODEL && window.INTERACTION_MODEL.interactionModel && window.INTERACTION_MODEL.interactionModel.languageModel && window.INTERACTION_MODEL.interactionModel.languageModel.intents) {
+      for (let i = 0; i < window.INTERACTION_MODEL.interactionModel.languageModel.intents.length; i++) {
+        if (this.props.intentName === window.INTERACTION_MODEL.interactionModel.languageModel.intents[i].name && window.INTERACTION_MODEL.interactionModel.languageModel.intents[i].slots && window.INTERACTION_MODEL.interactionModel.languageModel.intents[i].slots.length > 0) {
+          chosenModelIntent = window.INTERACTION_MODEL.interactionModel.languageModel.intents[i]
+          break;
+        }
+      }
+    }
+
+    console.log(this.props);
+
     return (
       <div className="container-fluid">
         <div className="page-header">
@@ -100,24 +113,44 @@ class Skill extends React.Component {
           <div>
             <div className="form-group">
               <label htmlFor="intent">Intent Name:</label>
-              <input className="form-control" type="text" id="intent" onChange={(event) => this.props.actions.setIntentName(event.target.value)} />
+              {window.INTERACTION_MODEL && window.INTERACTION_MODEL.interactionModel && window.INTERACTION_MODEL.interactionModel.languageModel && window.INTERACTION_MODEL.interactionModel.languageModel.intents ?
+                <select defaultValue={this.props.intentName} className="form-control" id="intent" onChange={(event) => this.props.actions.setIntentName(event.target.value)}>
+                  {window.INTERACTION_MODEL.interactionModel.languageModel.intents.map(function(intent) {
+                    return <option key={intent.name} value={intent.name}>{intent.name}</option>
+                  }, this)}
+                </select>
+              :
+                <input className="form-control" type="text" id="intent" onChange={(event) => this.props.actions.setIntentName(event.target.value)} />
+              }
             </div>
 
             <div className="form-group">
               <label>Slots:</label>
 
-              {this.props.slots && this.props.slots.map(function(slot, index) {
-                return <div className="slot" key={slot.id}>
-                  <input className="form-control" placeholder="Name" onChange={(event) => this.props.actions.setSlotKey(event.target.value, slot.id)} value={slot.key} type="text" />
-                  <input className="form-control" placeholder="Value" onChange={(event) => this.props.actions.setSlotValue(event.target.value, slot.id)} value={slot.value} type="text" />
-
-                  <a href="javascript:void(0)" className="delete-slot" onClick={(event) => this.props.actions.deleteSlot(slot.id)}>&times;</a>
+              {chosenModelIntent ?
+                <div>
+                  {chosenModelIntent.slots && chosenModelIntent.slots.map(function(slot) {
+                    return <div className="slot" key={slot.name}>
+                      <input className="form-control" placeholder="Name" onChange={(event) => this.props.actions.setSlotKey(event.target.value, slot.name)} value={slot.name} type="text" />
+                      <input className="form-control" placeholder="Value" onChange={(event) => this.props.actions.setSlotValue(event.target.value, slot.name)} value={slot.value} type="text" />
+                    </div>
+                  }, this)}
                 </div>
-              }, this)}
+              :
+                <div>
+                  {this.props.slots && this.props.slots.map(function(slot, index) {
+                    return <div className="slot" key={slot.id}>
+                      <input className="form-control" placeholder="Name" onChange={(event) => this.props.actions.setSlotKey(event.target.value, slot.id)} value={slot.key} type="text" />
+                      <input className="form-control" placeholder="Value" onChange={(event) => this.props.actions.setSlotValue(event.target.value, slot.id)} value={slot.value} type="text" />
 
-              <div className="form-group">
-                <a href="javascript:void(0)" onClick={() => this.props.actions.createSlot()}>Add a slot</a>
-              </div>
+                      <a href="javascript:void(0)" className="delete-slot" onClick={(event) => this.props.actions.deleteSlot(slot.id)}>&times;</a>
+                    </div>
+                  }, this)}
+                  <div className="form-group">
+                    <a href="javascript:void(0)" onClick={() => this.props.actions.createSlot()}>Add a slot</a>
+                  </div>
+                </div>
+              }
             </div>
           </div>
           :

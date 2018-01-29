@@ -20,10 +20,10 @@ export const setIntentName = function(name) {
   }
 }
 
-export const setSlotKey = function(key, id) {
+export const setSlotName = function(name, id) {
   debug('Action: setSlotKey')
   return {
-    type: types.SET_SLOT_KEY,
+    type: types.SET_SLOT_NAME,
     id: id,
     key: key
   }
@@ -43,7 +43,7 @@ export const createSlot = function() {
   return {
     type: types.CREATE_SLOT,
     slot: {
-      key: '',
+      name: '',
       value: '',
       id: shortid.generate()
     }

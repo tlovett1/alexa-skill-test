@@ -16,11 +16,18 @@ parser.addArgument(
   }
 );
 
+parser.addArgument(
+  [ '--interaction-model' ],
+  {
+    help: 'Path to interaction model'
+  }
+);
+
 // Add the port option
 parser.addArgument(
   ['--port'],
   {
-    help: 'Run on a Specific Port (Default=3000)'
+    help: 'Run on a specific port (default = 3000)'
   }
 );
 
@@ -58,10 +65,26 @@ try {
   process.exit(1);
 }
 
+var serverArgs = [
+  path  + '/' + mainScriptFile,
+  skillPackageConf.name, '--port ' + port
+];
+
+if (args.interaction_model) {
+  try {
+    var interactionModel = require(process.cwd() + '/' + args.interaction_model);
+  } catch (err) {
+    console.error('Interaction model not found or damaged.'.red);
+    process.exit(1);
+  }
+
+  serverArgs.push('--interaction-model ' + JSON.stringify(interactionModel));
+}
+
 nodemon({
   nodeArgs: (process.env.REMOTE_DEBUG) ? ['--debug'] : [],
   script: __dirname + '/../server.js',
-  args: [path  + '/' + mainScriptFile, skillPackageConf.name, '--port ' + port],
+  args: serverArgs,
   watch: [
     __dirname + '/../server.js',
     __dirname + '/../package.json',

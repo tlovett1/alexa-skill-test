@@ -16,8 +16,13 @@ var skill = require(process.argv[2]);
 
 var skillName = process.argv[3];
 
-// pull the port number out of the string '--port 3000' 
-var port = process.argv[4].substring(7, process.argv[4].length)
+// pull the port number out of the string '--port 3000'
+var port = process.argv[4].replace('--port ', '');
+
+var interactionModel = false;
+if (process.argv[5]) {
+  interactionModel = process.argv[5].replace('--interaction-model ', '');
+}
 
 var livereloadServerConf = {
   port: 35729
@@ -57,6 +62,7 @@ app.get('/', function(req, res) {
     '<body>',
     '<div id="root"></div>',
     '<script>window.SKILL_NAME = "' + skillName + '";</script>',
+    '<script>window.INTERACTION_MODEL = ' + interactionModel + '</script>',
     '<script src="' + webpackConf.output.filename + '"></script>',
     '</body>',
     '</html>'

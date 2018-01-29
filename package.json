@@ -6,9 +6,6 @@
   "engineStrict": true,
   "license": "MIT",
   "scripts": {
-    "start": "DEBUG=* node bin/start.js"
-  },
-  "scripts": {
     "build": "./node_modules/.bin/webpack"
   },
   "bin": {
@@ -52,6 +49,7 @@
     "minimist": "^1.2.0",
     "node-sass": "^4.5.0",
     "nodemon": "^1.11.0",
+    "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.3",

@@ -38,6 +38,16 @@ export const setSlotValue = function(value, id) {
   }
 }
 
+export const setFixedSlot = function(value, name) {
+  debug('Action: setFixedSlot')
+  return {
+    type: types.SET_FIXED_SLOT,
+    id: name,
+    name: name,
+    value: value
+  }
+}
+
 export const createSlot = function() {
   debug('Action: createSlot')
   return {

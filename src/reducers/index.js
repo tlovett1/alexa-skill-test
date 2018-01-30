@@ -1,4 +1,4 @@
-import { SET_REQUEST_TYPE, ADD_SLOT, SET_INTENT_NAME, SET_SLOT_KEY, DELETE_SLOT, SET_SLOT_VALUE, SET_REQUEST, DO_REQUEST, CREATE_SLOT } from '../constants/ActionTypes'
+import { SET_REQUEST_TYPE, ADD_SLOT, SET_INTENT_NAME, SET_SLOT_KEY, DELETE_SLOT, SET_FIXED_SLOT, SET_SLOT_VALUE, SET_REQUEST, DO_REQUEST, CREATE_SLOT } from '../constants/ActionTypes'
 import immutable from 'immutable'
 const debug = require('debug')('app')
 
@@ -19,6 +19,30 @@ export default function(state = initialState, action) {
       return state
     case SET_INTENT_NAME:
       return state.set('intentName', action.intentName)
+    case SET_FIXED_SLOT:
+      var slots = state.get('slots')
+
+      var updated = false
+
+      slots = slots.map(function(slot) {
+        if (slot.name === action.name) {
+          slot.value = action.value
+          updated = true
+        }
+
+        return slot
+      })
+
+      if (!updated) {
+        let newSlot = {
+          name: action.name,
+          value: action.value
+        }
+
+        return state.set('slots', state.get('slots').push(newSlot))
+      }
+
+      return state.set('slots', slots)
     case CREATE_SLOT:
       return state.set('slots', state.get('slots').push(action.slot))
     case SET_SLOT_KEY:

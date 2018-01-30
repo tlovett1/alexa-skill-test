@@ -128,9 +128,9 @@ class Skill extends React.Component {
               {chosenModelIntent ?
                 <div>
                   {chosenModelIntent.slots && chosenModelIntent.slots.map(function(slot) {
-                    return <div className="slot" key={slot.id}>
-                      <input className="form-control" placeholder="Name" onChange={(event) => this.props.actions.setSlotKey(event.target.value, slot.id)} value={slot.name} type="text" />
-                      <input className="form-control" placeholder="Value" onChange={(event) => this.props.actions.setSlotValue(event.target.value, slot.id)} value={slot.value} type="text" />
+                    return <div className="slot" key={slot.name}>
+                      <input readOnly={true} className="form-control" placeholder="Name" value={slot.name} type="text" />
+                      <input className="form-control" placeholder="Value" onChange={(event) => this.props.actions.setFixedSlot(event.target.value, slot.name)} value={slot.value} type="text" />
                     </div>
                   }, this)}
                 </div>

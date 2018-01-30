@@ -79,7 +79,7 @@ app.post('/lambda', function(req, res) {
     event: req.body.event,
     lambdaPath: process.argv[2],
     lambdaHandler: 'handler',
-    timeoutMs: 3000,
+    timeoutMs: 10000,
     callback: function(error, data) {
         if (error) {
           debug('Lambda returned error');

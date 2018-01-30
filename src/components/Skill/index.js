@@ -90,8 +90,6 @@ class Skill extends React.Component {
       }
     }
 
-    console.log(this.props);
-
     return (
       <div className="container-fluid">
         <div className="page-header">
@@ -130,9 +128,9 @@ class Skill extends React.Component {
               {chosenModelIntent ?
                 <div>
                   {chosenModelIntent.slots && chosenModelIntent.slots.map(function(slot) {
-                    return <div className="slot" key={slot.name}>
-                      <input className="form-control" placeholder="Name" onChange={(event) => this.props.actions.setSlotKey(event.target.value, slot.name)} value={slot.name} type="text" />
-                      <input className="form-control" placeholder="Value" onChange={(event) => this.props.actions.setSlotValue(event.target.value, slot.name)} value={slot.value} type="text" />
+                    return <div className="slot" key={slot.id}>
+                      <input className="form-control" placeholder="Name" onChange={(event) => this.props.actions.setSlotKey(event.target.value, slot.id)} value={slot.name} type="text" />
+                      <input className="form-control" placeholder="Value" onChange={(event) => this.props.actions.setSlotValue(event.target.value, slot.id)} value={slot.value} type="text" />
                     </div>
                   }, this)}
                 </div>
@@ -140,7 +138,7 @@ class Skill extends React.Component {
                 <div>
                   {this.props.slots && this.props.slots.map(function(slot, index) {
                     return <div className="slot" key={slot.id}>
-                      <input className="form-control" placeholder="Name" onChange={(event) => this.props.actions.setSlotKey(event.target.value, slot.id)} value={slot.key} type="text" />
+                      <input className="form-control" placeholder="Name" onChange={(event) => this.props.actions.setSlotKey(event.target.value, slot.id)} value={slot.name} type="text" />
                       <input className="form-control" placeholder="Value" onChange={(event) => this.props.actions.setSlotValue(event.target.value, slot.id)} value={slot.value} type="text" />
 
                       <a href="javascript:void(0)" className="delete-slot" onClick={(event) => this.props.actions.deleteSlot(slot.id)}>&times;</a>

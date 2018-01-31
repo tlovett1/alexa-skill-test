@@ -20,50 +20,53 @@ export const setIntentName = function(name) {
   }
 }
 
-export const setSlotName = function(name, id) {
-  debug('Action: setSlotKey')
+export const setSlotName = function(name, id, intentName) {
+  debug('Action: setSlotName')
   return {
     type: types.SET_SLOT_NAME,
+    intentName: intentName,
     id: id,
-    key: key
+    name: name
   }
 }
 
-export const setSlotValue = function(value, id) {
+export const setSlotValue = function(value, id, intentName) {
   debug('Action: setSlotValue')
   return {
     type: types.SET_SLOT_VALUE,
+    intentName: intentName,
     id: id,
     value: value
   }
 }
 
-export const setFixedSlot = function(value, name) {
+export const setFixedSlot = function(value, name, intentName) {
   debug('Action: setFixedSlot')
   return {
     type: types.SET_FIXED_SLOT,
-    id: name,
+    intentName: intentName,
     name: name,
-    value: value
+    value: value,
+    id: name
   }
 }
 
-export const createSlot = function() {
+export const createSlot = function(intentName) {
   debug('Action: createSlot')
   return {
     type: types.CREATE_SLOT,
-    slot: {
-      name: '',
-      value: '',
-      id: shortid.generate()
-    }
+    intentName: intentName,
+    name: '',
+    value: '',
+    id: shortid.generate()
   }
 }
 
-export const deleteSlot = function(id) {
+export const deleteSlot = function(id, intentName) {
   debug('Action: deleteSlot')
   return {
     type: types.DELETE_SLOT,
+    intentName: intentName,
     id: id
   }
 }

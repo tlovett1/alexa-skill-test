@@ -1,9 +1,9 @@
-import { SET_REQUEST_TYPE, ADD_SLOT, SET_INTENT_NAME, SET_SLOT_KEY, DELETE_SLOT, SET_FIXED_SLOT, SET_SLOT_VALUE, SET_REQUEST, DO_REQUEST, CREATE_SLOT } from '../constants/ActionTypes'
+import { SET_REQUEST_TYPE, SET_INTENT_NAME, SET_SLOT_NAME, DELETE_SLOT, SET_FIXED_SLOT, SET_SLOT_VALUE, SET_REQUEST, DO_REQUEST, CREATE_SLOT } from '../constants/ActionTypes'
 import immutable from 'immutable'
 const debug = require('debug')('app')
 
 const initialState = immutable.Map({
-  slots: immutable.List(),
+  slotsByIntent: immutable.Map(),
   requestType: 'launch',
   intentName: '',
   response: {}
@@ -15,16 +15,26 @@ export default function(state = initialState, action) {
   switch (action.type) {
     case SET_REQUEST_TYPE:
       return state.set('requestType', action.requestType)
-    case ADD_SLOT:
-      return state
     case SET_INTENT_NAME:
       return state.set('intentName', action.intentName)
     case SET_FIXED_SLOT:
-      var slots = state.get('slots')
-
+      var slotsByIntent = state.get('slotsByIntent')
+      var intentSlots = slotsByIntent.get(action.intentName)
       var updated = false
 
-      slots = slots.map(function(slot) {
+      if (!intentSlots) {
+        intentSlots = immutable.List()
+
+        intentSlots = intentSlots.push({
+          name: action.name,
+          id: action.name,
+          value: action.value
+        })
+
+        return state.set('slotsByIntent', slotsByIntent.set(action.intentName, intentSlots))
+      }
+
+      intentSlots = intentSlots.map(function(slot) {
         if (slot.name === action.name) {
           slot.value = action.value
           updated = true
@@ -34,33 +44,55 @@ export default function(state = initialState, action) {
       })
 
       if (!updated) {
-        let newSlot = {
+        intentSlots = intentSlots.push({
           name: action.name,
+          id: action.name,
           value: action.value
-        }
-
-        return state.set('slots', state.get('slots').push(newSlot))
+        })
       }
 
-      return state.set('slots', slots)
+      return state.set('slotsByIntent', slotsByIntent.set(action.intentName, intentSlots))
     case CREATE_SLOT:
-      return state.set('slots', state.get('slots').push(action.slot))
-    case SET_SLOT_KEY:
-      var slots = state.get('slots')
+      var slotsByIntent = state.get('slotsByIntent')
+      var intentSlots = slotsByIntent.get(action.intentName)
 
-      slots = slots.map(function(slot) {
+      if (!intentSlots) {
+        intentSlots = immutable.List()
+      }
+
+      intentSlots = intentSlots.push({
+        id: action.id,
+        name: action.name,
+        value: action.value
+      })
+
+      return state.set('slotsByIntent', slotsByIntent.set(action.intentName, intentSlots))
+    case SET_SLOT_NAME:
+      var slotsByIntent = state.get('slotsByIntent')
+      var intentSlots = slotsByIntent.get(action.intentName)
+
+      if (!intentSlots) {
+        return state
+      }
+
+      intentSlots = intentSlots.map(function(slot) {
         if (slot.id === action.id) {
-          slot.key = action.key
+          slot.name = action.name
         }
 
         return slot
       })
 
-      return state.set('slots', slots)
+      return state.set('slotsByIntent', slotsByIntent.set(action.intentName, intentSlots))
     case DELETE_SLOT:
-      var slots = state.get('slots')
+      var slotsByIntent = state.get('slotsByIntent')
+      var intentSlots = slotsByIntent.get(action.intentName)
 
-      slots = slots.filter(function(slot) {
+      if (!intentSlots) {
+        return state
+      }
+
+      intentSlots = intentSlots.filter(function(slot) {
         if (slot.id === action.id) {
           return false
         }
@@ -68,13 +100,16 @@ export default function(state = initialState, action) {
         return true
       })
 
-      console.log(slots);
-
-      return state.set('slots', slots)
+      return state.set('slotsByIntent', slotsByIntent.set(action.intentName, intentSlots))
     case SET_SLOT_VALUE:
-      var slots = state.get('slots')
+      var slotsByIntent = state.get('slotsByIntent')
+      var intentSlots = slotsByIntent.get(action.intentName)
 
-      slots = slots.map(function(slot) {
+      if (!intentSlots) {
+        return state
+      }
+
+      intentSlots = intentSlots.map(function(slot) {
         if (slot.id === action.id) {
           slot.value = action.value
         }
@@ -82,7 +117,7 @@ export default function(state = initialState, action) {
         return slot
       })
 
-      return state.set('slots', slots)
+      return state.set('slotsByIntent', slotsByIntent.set(action.intentName, intentSlots))
     case DO_REQUEST:
       return state.set('response', action.response)
     default:

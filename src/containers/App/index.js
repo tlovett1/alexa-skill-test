@@ -17,7 +17,7 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-  slots: PropTypes.object.isRequired,
+  slotsByIntent: PropTypes.object.isRequired,
   intentName: PropTypes.string.isRequired,
   requestType: PropTypes.string.isRequired,
   response: PropTypes.object.isRequired,
@@ -28,7 +28,7 @@ const mapStateToProps = state => ({
   requestType: state.get('requestType'),
   intentName: state.get('intentName'),
   response: state.get('response'),
-  slots: state.get('slots')
+  slotsByIntent: state.get('slotsByIntent')
 })
 
 const mapDispatchToProps = dispatch => ({

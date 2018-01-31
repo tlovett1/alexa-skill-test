@@ -29,15 +29,17 @@ class Skill extends React.Component {
 
       if (props.intentName) {
         request.request.intent.name = props.intentName
-      }
 
-      if (props.slots.size >= 1) {
-        props.slots.forEach(function(slot) {
-          request.request.intent.slots[slot.key] = {
-            name: slot.key,
-            value: slot.value
-          }
-        })
+        console.log(props.slotsByIntent)
+
+        if (props.slotsByIntent.get(props.intentName) && props.slotsByIntent.get(props.intentName).size >= 1) {
+          props.slotsByIntent.get(props.intentName).forEach(function(slot) {
+            request.request.intent.slots[slot.key] = {
+              name: slot.key,
+              value: slot.value
+            }
+          })
+        }
       }
     }
 
@@ -79,16 +81,37 @@ class Skill extends React.Component {
     const response = beautify(JSON.stringify(this.props.response))
     const requestClass = (this.state.validRequest) ? 'code' : 'invalid code'
 
-    let chosenModelIntent = null
+    let slots = []
 
-    if (this.props.intentName && window.INTERACTION_MODEL && window.INTERACTION_MODEL.interactionModel && window.INTERACTION_MODEL.interactionModel.languageModel && window.INTERACTION_MODEL.interactionModel.languageModel.intents) {
-      for (let i = 0; i < window.INTERACTION_MODEL.interactionModel.languageModel.intents.length; i++) {
-        if (this.props.intentName === window.INTERACTION_MODEL.interactionModel.languageModel.intents[i].name && window.INTERACTION_MODEL.interactionModel.languageModel.intents[i].slots && window.INTERACTION_MODEL.interactionModel.languageModel.intents[i].slots.length > 0) {
-          chosenModelIntent = window.INTERACTION_MODEL.interactionModel.languageModel.intents[i]
-          break;
+    if (window.INTERACTION_MODEL) {
+      if (this.props.intentName && this.props.slotsByIntent.get(this.props.intentName)) {
+        slots = this.props.slotsByIntent.get(this.props.intentName)
+      } else {
+        let chosenModelIntent = null
+
+        if (this.props.intentName && window.INTERACTION_MODEL && window.INTERACTION_MODEL.interactionModel && window.INTERACTION_MODEL.interactionModel.languageModel && window.INTERACTION_MODEL.interactionModel.languageModel.intents) {
+          for (let i = 0; i < window.INTERACTION_MODEL.interactionModel.languageModel.intents.length; i++) {
+            if (this.props.intentName === window.INTERACTION_MODEL.interactionModel.languageModel.intents[i].name) {
+              chosenModelIntent = window.INTERACTION_MODEL.interactionModel.languageModel.intents[i]
+              break;
+            }
+          }
+        }
+
+        if (chosenModelIntent && chosenModelIntent.slots) {
+          slots = chosenModelIntent.slots
         }
       }
+    } else {
+      if (this.props.slotsByIntent.get('default')) {
+        slots = this.props.slotsByIntent.get('default')
+      }
     }
+
+    console.log(slots)
+
+    console.log(this.props)
+
 
     return (
       <div className="container-fluid">
@@ -125,27 +148,27 @@ class Skill extends React.Component {
             <div className="form-group">
               <label>Slots:</label>
 
-              {chosenModelIntent ?
+              {window.INTERACTION_MODEL && window.INTERACTION_MODEL.interactionModel ?
                 <div>
-                  {chosenModelIntent.slots && chosenModelIntent.slots.map(function(slot) {
+                  {slots.map(function(slot) {
                     return <div className="slot" key={slot.name}>
                       <input readOnly={true} className="form-control" placeholder="Name" value={slot.name} type="text" />
-                      <input className="form-control" placeholder="Value" onChange={(event) => this.props.actions.setFixedSlot(event.target.value, slot.name)} value={slot.value} type="text" />
+                      <input className="form-control" placeholder="Value" onChange={(event) => this.props.actions.setFixedSlot(event.target.value, slot.name, this.props.intentName)} value={slot.value} type="text" />
                     </div>
                   }, this)}
                 </div>
               :
                 <div>
-                  {this.props.slots && this.props.slots.map(function(slot, index) {
+                  {slots.map(function(slot, index) {
                     return <div className="slot" key={slot.id}>
-                      <input className="form-control" placeholder="Name" onChange={(event) => this.props.actions.setSlotKey(event.target.value, slot.id)} value={slot.name} type="text" />
-                      <input className="form-control" placeholder="Value" onChange={(event) => this.props.actions.setSlotValue(event.target.value, slot.id)} value={slot.value} type="text" />
+                      <input className="form-control" placeholder="Name" onChange={(event) => this.props.actions.setSlotName(event.target.value, slot.id, 'default')} value={slot.name} type="text" />
+                      <input className="form-control" placeholder="Value" onChange={(event) => this.props.actions.setSlotValue(event.target.value, slot.id, 'default')} value={slot.value} type="text" />
 
-                      <a href="javascript:void(0)" className="delete-slot" onClick={(event) => this.props.actions.deleteSlot(slot.id)}>&times;</a>
+                      <a href="javascript:void(0)" className="delete-slot" onClick={(event) => this.props.actions.deleteSlot(slot.id, 'default')}>&times;</a>
                     </div>
                   }, this)}
                   <div className="form-group">
-                    <a href="javascript:void(0)" onClick={() => this.props.actions.createSlot()}>Add a slot</a>
+                    <a href="javascript:void(0)" onClick={() => this.props.actions.createSlot('default')}>Add a slot</a>
                   </div>
                 </div>
               }

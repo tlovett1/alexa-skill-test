@@ -33,13 +33,14 @@ parser.addArgument(
 
 var args = parser.parseArgs();
 
-var path = args.path ? args.path : process.cwd();
+var currentPath = args.path ? args.path : '.';
+currentPath = path.resolve(currentPath);
 
 // Set port value
 var port = args.port ? args.port : 3000;
 
 try {
-  var skillPackageConf = require(path + '/package.json');
+  var skillPackageConf = require(currentPath + '/package.json');
 } catch (err) {
   console.error('Package.json not found.'.red);
   process.exit(1);
@@ -58,7 +59,7 @@ if (!skillPackageConf.main) {
 var mainScriptFile = skillPackageConf.main;
 
 try {
-  var mainScript = require(path + '/' + mainScriptFile);
+  var mainScript = require(currentPath + '/' + mainScriptFile);
 } catch (error) {
   console.error('Problem with main script file.'.red);
   console.log(error);
@@ -66,31 +67,27 @@ try {
 }
 
 var serverArgs = [
-  path  + '/' + mainScriptFile,
+  currentPath  + '/' + mainScriptFile,
   skillPackageConf.name, '--port ' + port
 ];
 
-if (args.interaction_model) {
-  try {
-    var interactionModel = require(process.cwd() + '/' + args.interaction_model);
-  } catch (err) {
-    console.error('Interaction model not found or damaged.'.red);
-    process.exit(1);
-  }
+var watchList = [
+  __dirname + '/../server.js',
+  __dirname + '/../package.json',
+  __dirname + '/../webpack.config.js',
+  currentPath + '/'
+];
 
-  serverArgs.push('--interaction-model ' + JSON.stringify(interactionModel));
+if (args.interaction_model) {
+  watchList.push(path.resolve(args.interaction_model));
+  serverArgs.push('--interaction-model ' + path.resolve(args.interaction_model));
 }
 
 nodemon({
   nodeArgs: (process.env.REMOTE_DEBUG) ? ['--debug'] : [],
   script: __dirname + '/../server.js',
   args: serverArgs,
-  watch: [
-    __dirname + '/../server.js',
-    __dirname + '/../package.json',
-    __dirname + '/../webpack.config.js',
-    path + '/'
-  ],
+  watch: watchList,
   env: {
     'DEBUG': (process.env.DEBUG) ? process.env.DEBUG : 'skill'
   }

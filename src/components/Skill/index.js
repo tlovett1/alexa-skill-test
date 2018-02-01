@@ -34,8 +34,8 @@ class Skill extends React.Component {
 
         if (props.slotsByIntent.get(props.intentName) && props.slotsByIntent.get(props.intentName).size >= 1) {
           props.slotsByIntent.get(props.intentName).forEach(function(slot) {
-            request.request.intent.slots[slot.key] = {
-              name: slot.key,
+            request.request.intent.slots[slot.name] = {
+              name: slot.name,
               value: slot.value
             }
           })

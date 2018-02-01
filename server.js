@@ -21,7 +21,13 @@ var port = process.argv[4].replace('--port ', '');
 
 var interactionModel = false;
 if (process.argv[5]) {
-  interactionModel = process.argv[5].replace('--interaction-model ', '');
+  var interactionModelPath = process.argv[5].replace('--interaction-model ', '');
+
+  try {
+    interactionModel = JSON.stringify(require(interactionModelPath));
+  } catch (err) {
+    // Do nothing
+  }
 }
 
 var livereloadServerConf = {

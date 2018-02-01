@@ -22,7 +22,7 @@ module.exports = {
           {
             loader: "sass-loader",
             options: {
-              includePaths: [path.join(__dirname, 'node_modules/bootstrap-sass/assets/stylesheets')]
+              includePaths: [path.join(__dirname, 'node_modules/bootstrap-sass/assets/stylesheets'), 'node_modules']
             }
           }
         ]
@@ -43,10 +43,10 @@ module.exports = {
     colors: true
   },
   resolveLoader: {
-    modules: [path.join(__dirname, 'node_modules')]
+    modules: [path.join(__dirname, 'node_modules'), 'node_modules']
   },
   resolve: {
-    modules: [path.join(__dirname, 'node_modules')]
+    modules: [path.join(__dirname, 'node_modules'), 'node_modules']
   },
   plugins: [
     new webpack.DefinePlugin({

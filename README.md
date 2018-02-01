@@ -14,15 +14,23 @@ It's recommended to install Alexa Skill Test as a global npm package:
 
 After install, the `alexa-skill-test` command will be available to you.
 
+## Command
+
+Alexa Skill Test works off one command:
+
+`alexa-skill-test [--path] [--interaction-model]`
+
+`--path` let's you optionally specify a relative path to your skill. `--interaction-model` let's you optionally specify a relative path to your interaction model.
+
 ## Usage
 
 Within your terminal, change directory to your valid Amazon skill. Your skill will need a `package.json` and a main script file. Run the following command:
 
 `alexa-skill-test`
 
-This starts up a local testing server using your Alexa skill.
+This starts up a local testing server using your Alexa skill. If you specify a relative path to an interaction model using `--interaction-model`, the app will prefill your skill intents for you.
 
-In your browser navigate to `http://localhost:3000`. You should see a simple UI for sending test requests to your skill.
+In your browser, navigate to `http://localhost:3000`. You should see a simple UI for sending test requests to your skill.
 
 *Note:*
 

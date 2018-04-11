@@ -14,6 +14,10 @@ export default function(state = initialState, action) {
 
   switch (action.type) {
     case SET_REQUEST_TYPE:
+      if (action.firstIntentName) {
+        state = state.set('intentName', action.firstIntentName)
+      }
+
       return state.set('requestType', action.requestType)
     case SET_INTENT_NAME:
       return state.set('intentName', action.intentName)
@@ -34,7 +38,7 @@ export default function(state = initialState, action) {
         return state.set('slotsByIntent', slotsByIntent.set(action.intentName, intentSlots))
       }
 
-      intentSlots = intentSlots.map(function(slot) {
+      intentSlots = intentSlots.map((slot) => {
         if (slot.name === action.name) {
           slot.value = action.value
           updated = true
@@ -75,7 +79,7 @@ export default function(state = initialState, action) {
         return state
       }
 
-      intentSlots = intentSlots.map(function(slot) {
+      intentSlots = intentSlots.map((slot) => {
         if (slot.id === action.id) {
           slot.name = action.name
         }
@@ -92,7 +96,7 @@ export default function(state = initialState, action) {
         return state
       }
 
-      intentSlots = intentSlots.filter(function(slot) {
+      intentSlots = intentSlots.filter((slot) => {
         if (slot.id === action.id) {
           return false
         }
@@ -109,7 +113,7 @@ export default function(state = initialState, action) {
         return state
       }
 
-      intentSlots = intentSlots.map(function(slot) {
+      intentSlots = intentSlots.map((slot) => {
         if (slot.id === action.id) {
           slot.value = action.value
         }

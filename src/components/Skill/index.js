@@ -33,7 +33,7 @@ class Skill extends React.Component {
         console.log(props.slotsByIntent)
 
         if (props.slotsByIntent.get(props.intentName) && props.slotsByIntent.get(props.intentName).size >= 1) {
-          props.slotsByIntent.get(props.intentName).forEach(function(slot) {
+          props.slotsByIntent.get(props.intentName).forEach((slot) => {
             request.request.intent.slots[slot.name] = {
               name: slot.name,
               value: slot.value
@@ -81,25 +81,36 @@ class Skill extends React.Component {
     const response = beautify(JSON.stringify(this.props.response))
     const requestClass = (this.state.validRequest) ? 'code' : 'invalid code'
 
+    let firstIntentName = null
     let slots = []
 
-    if (window.INTERACTION_MODEL) {
+    if (window.INTERACTION_MODEL && window.INTERACTION_MODEL.interactionModel && window.INTERACTION_MODEL.interactionModel.languageModel && window.INTERACTION_MODEL.interactionModel.languageModel.intents) {
+      if (window.INTERACTION_MODEL.interactionModel.languageModel.intents[0]) {
+        firstIntentName = window.INTERACTION_MODEL.interactionModel.languageModel.intents[0].name
+      }
+
       if (this.props.intentName && this.props.slotsByIntent.get(this.props.intentName)) {
         slots = this.props.slotsByIntent.get(this.props.intentName)
       } else {
         let chosenModelIntent = null
 
-        if (this.props.intentName && window.INTERACTION_MODEL && window.INTERACTION_MODEL.interactionModel && window.INTERACTION_MODEL.interactionModel.languageModel && window.INTERACTION_MODEL.interactionModel.languageModel.intents) {
+        if (this.props.intentName) {
           for (let i = 0; i < window.INTERACTION_MODEL.interactionModel.languageModel.intents.length; i++) {
             if (this.props.intentName === window.INTERACTION_MODEL.interactionModel.languageModel.intents[i].name) {
               chosenModelIntent = window.INTERACTION_MODEL.interactionModel.languageModel.intents[i]
-              break;
+              break
             }
           }
-        }
 
-        if (chosenModelIntent && chosenModelIntent.slots) {
-          slots = chosenModelIntent.slots
+          if (chosenModelIntent && chosenModelIntent.slots) {
+            chosenModelIntent.slots.forEach((slot) => {
+              slots.push({
+                id: slot.name,
+                name: slot.name,
+                value: ''
+              })
+            })
+          }
         }
       }
     } else {
@@ -107,11 +118,6 @@ class Skill extends React.Component {
         slots = this.props.slotsByIntent.get('default')
       }
     }
-
-    console.log(slots)
-
-    console.log(this.props)
-
 
     return (
       <div className="container-fluid">
@@ -123,7 +129,7 @@ class Skill extends React.Component {
 
         <div className="form-group">
           <label htmlFor="requestType">Request Type:</label>
-          <select id="requestType" className="form-control" defaultValue={this.props.requestType} onChange={(event) => this.props.actions.setRequestType(event.target.value)} id="request_type">
+          <select id="requestType" className="form-control" defaultValue={this.props.requestType} onChange={(event) => this.props.actions.setRequestType(event.target.value, firstIntentName)} id="request_type">
             <option value="launch">LaunchRequest</option>
             <option value="intent">IntentRequest</option>
             <option value="session_end">SessionEndedRequest</option>
@@ -141,7 +147,7 @@ class Skill extends React.Component {
                   }, this)}
                 </select>
               :
-                <input className="form-control" type="text" id="intent" onChange={(event) => this.props.actions.setIntentName(event.target.value)} />
+                <input className="form-control" defaultValue={this.props.intentName} type="text" id="intent" onChange={(event) => this.props.actions.setIntentName(event.target.value)} />
               }
             </div>
 

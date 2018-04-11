@@ -4,10 +4,11 @@ import $ from 'jquery'
 const debug = require('debug')('app')
 import shortid from 'shortid'
 
-export const setRequestType = function(type) {
+export const setRequestType = function(type, firstIntentName) {
   debug('Action: setRequestType')
   return {
     type: types.SET_REQUEST_TYPE,
+    firstIntentName: firstIntentName,
     requestType: type
   }
 }

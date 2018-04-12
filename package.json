@@ -1,6 +1,6 @@
 {
   "name": "alexa-skill-test",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Test Alexa skills through a local server.",
   "main": "bin/start.js",
   "engineStrict": true,

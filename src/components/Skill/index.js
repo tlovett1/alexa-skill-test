@@ -30,10 +30,13 @@ class Skill extends React.Component {
       if (props.intentName) {
         request.request.intent.name = props.intentName
 
-        console.log(props.slotsByIntent)
+        let slotLookUp = 'default'
+        if (window.INTERACTION_MODEL) {
+          slotLookUp = props.intentName
+        }
 
-        if (props.slotsByIntent.get(props.intentName) && props.slotsByIntent.get(props.intentName).size >= 1) {
-          props.slotsByIntent.get(props.intentName).forEach((slot) => {
+        if (props.slotsByIntent.get(slotLookUp) && props.slotsByIntent.get(slotLookUp).size >= 1) {
+          props.slotsByIntent.get(slotLookUp).forEach((slot) => {
             request.request.intent.slots[slot.name] = {
               name: slot.name,
               value: slot.value
